@@ -490,6 +490,13 @@ func TestExecutionSchedulerRunCustomConfigNoCrossover(t *testing.T) {
 		nil, lib.RuntimeOptions{Env: map[string]string{"TESTGLOBALVAR": "global"}})
 	require.NoError(t, err)
 
+	// Required for WS tests
+	opts := runner.GetOptions()
+	opts.Hosts = map[string]net.IP{
+		"httpbin.local": net.ParseIP("127.0.0.1"),
+	}
+	require.NoError(t, runner.SetOptions(opts))
+
 	logger := logrus.New()
 	logger.SetOutput(testutils.NewTestOutput(t))
 	execScheduler, err := NewExecutionScheduler(runner, logger)
